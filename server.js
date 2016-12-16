@@ -5,7 +5,7 @@ var mysql = require("mysql");
 var mongo = require("mongodb").MongoClient;
 var assert = require('assert');
 var q = require('q');
-var googleMapsClient = require('@google/maps').createClient({key: 'AIzaSyB1nUbkDzBuUweZs2YVNRrjPLfmiRFF0M0', Promise: q.Promise}); //AIzaSyAA6wJx2Go9j6dFU3ANJ5H8DBiwwDFAa0o
+var googleMapsClient = require('@google/maps').createClient({key: 'INSERT-GOOGLE-API-KEY-HERE', Promise: q.Promise});
 var map = Array.prototype.map;
 var mongoURL = 'mongodb://localhost:27017/yelp';
 var mongoCollectionName = 'yelpc';
@@ -34,7 +34,7 @@ http.createServer(function(request, response) {
       var collection = db.collection(mongoCollectionName);
       collection.find({'rating': {'$gte': parseFloat(queryData.min_rating_average), '$lte': parseFloat(queryData.max_rating_average)}, 'review_count': {'$gte': parseInt(queryData.min_rating_amount), '$lte': parseInt(queryData.max_rating_amount)}}).project({'_id': 0, 'address': 1}).toArray(function(err, docs) {
         assert.equal(err, null);
-        conditions.push('Street_address in (\'' + map.call(docs, function(doc) {return doc.address.split('\'').join('\'\'');} ).join('\',\'') + '\')'); /*.replace(/\s+/," ")*/ /*replace('\'','\'\'')*/
+        conditions.push('Street_address in (\'' + map.call(docs, function(doc) {return doc.address.split('\'').join('\'\'');} ).join('\',\'') + '\')');
         if(conditions.length != 0) queryString = queryString + ' where ' + conditions.join(' and ');
         con.query(queryString, function(err1, rows, fields) {
           if (err1) throw err1;
@@ -43,7 +43,7 @@ http.createServer(function(request, response) {
             data = data.toString();
             q.all( map.call(rows, function(row) { return googleMapsClient.geocode({address: (row.Street_address + ', Philadelphia, PA')}).asPromise(); }) ).done(function(values) {
               var c = 0;
-              markerText = map.call(values, function(value) { if(!("json" in value) || !("results" in value.json) || (value.json.results.length === 0) || !("geometry" in value.json.results[0]) || !("location" in value.json.results[0].geometry)) return ''; console.log(value); var l = value.json.results[0].geometry.location; c = c + 1; return '        var marker' + c + ' = new google.maps.Marker({position: {lat: ' + l.lat + ', lng: ' + l.lng + '}, map:map});'}).join('\n');
+              markerText = map.call(values, function(value) { if(!("json" in value) || !("results" in value.json) || (value.json.results.length === 0) || !("geometry" in value.json.results[0]) || !("location" in value.json.results[0].geometry)) return ''; var l = value.json.results[0].geometry.location; c = c + 1; return '        var marker' + c + ' = new google.maps.Marker({position: {lat: ' + l.lat + ', lng: ' + l.lng + '}, map:map});'}).join('\n');
               dataFinal = data.replace('/*RESULTS GO HERE*/',markerText);
               response.writeHead(200, {"Content-Type": "text/html", 'Content-Length': dataFinal.length});
               response.write(dataFinal);
