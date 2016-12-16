@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Search Page</title>
+	</head>
+	<body>
+		<form action="results">
+        	ZIP: <input type="text" name="zip" size="5" maxlength="5"><br>
+        	<!--Last Inspected After: <input type="date" name="last-inspected-after"><br>-->
+        	<!--Last Inspected Before: <input type="date" name="last-inspected-before"><br>-->
+            Has Violations: <input type="text" name="violations"> <a href="http://www.phila.gov/health/pdfs/UnderstandingtheFoodFacilityInspectionReport_12-1-14%20final.pdf">Description of violations</a><br>
+            Comment Search: <input type="text" name="comments"><br>
+			Minimum Average Rating:
+            <select name="min_rating_average">
+            	<option value="1" selected>1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+                <option value="2.5">2.5</option>
+                <option value="3">3</option>
+                <option value="3.5">3.5</option>
+                <option value="4">4</option>
+                <option value="4.5">4.5</option>
+                <option value="5">5</option>
+            </select><br>
+            Maximum Average Rating:
+            <select name="max_rating_average">
+            	<option value="1">1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+                <option value="2.5">2.5</option>
+                <option value="3">3</option>
+                <option value="3.5">3.5</option>
+                <option value="4">4</option>
+                <option value="4.5">4.5</option>
+                <option value="5" selected>5</option>
+            </select><br>
+            Minimum Number of Ratings:
+            <input type="text" name="min_rating_amount" size="7" maxlength="7"><br>
+            Maximum Number of Ratings:
+            <input type="text" name="max_rating_amount" size="7" maxlength="7"><br>
+			<input type="submit" value="Search">
+		</form>
+
+	</body>
+</html>
